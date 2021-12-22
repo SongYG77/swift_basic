@@ -222,5 +222,99 @@ print(jungclass.name)
 //연결이 되어 있다
 
 
+//프로퍼티 옵저버
+
+var myAge = 0 {
+    willSet{
+        print("값이 설정될 예정 \(myAge)")
+    }
+    didSet{
+        print("값이 설정되었다. \(myAge)")
+    }
+}
+
+
+myAge = 10
+myAge = 20
+
+
+//함수 ,매개변수
+
+func myfunc(name : String) -> String{
+    return "안녕하세요 \(name)"
+}
+
+print(myfunc(name: "이름"))
+
+func myfunc2(abc name : String) -> String{
+    return "안녕하세요 \(name)"
+}
+print(myfunc2(abc: "매개변수 바꾸기"))
+
+func myfunc3(_ name : String) -> String{
+    return "안녕하세요 \(name)"
+}
+ 
+print(myfunc3("따로 이름 지정x _"))
+
+
+//제네릭
+
+struct MyArray<SomeEl>{
+    
+    //제네릭을 담은 빈 배열
+    var elements : [SomeEl] = [SomeEl]()
+    init(_ elements : [SomeEl]){
+        self.elements = elements
+    }
+}
+
+struct Friend{
+    var name : String
+}
+
+var mysome = MyArray([1,2,3,4])
+
+print(mysome)
+
+let fr1 = Friend(name: "name1")
+
+let fr2 = Friend(name: "name2")
+let fr3 = Friend(name: "name3")
+
+var mysome2 = MyArray([fr1,fr2,fr3])
+print(mysome2)
+
+//제네릭은 어떠한 형태든 받을 수 있다.
+
+//<> 안에 있는 것이 이제 제네릭 변수
+//사용하여 안에 elements 는 배열이지만 어떠한 자료형이 저장되는지는 지정이 안되어있다.
+
+
+//클로저
+//스트링을 반환하는 클러저
+
+let mName : String = {
+    return "DLFMA"
+}()
+
+print(mName)
+
+//클로저 정의
+let myRname : (String) -> String = { (name : String) -> String in
+    return "개발자 \(name)"
+}
+// 메소드 이지만 스트링을 받아 스트링 결고를 저장하는데 이때 받는 것을 name으로 받아 저장하고 이를 return 값을 저장한다
+// 결과가 String 형태인데  in을 사용하여 return 하는 값을 받게 되는것.
+
+print(myRname("이름"))
+
+let  mrnlogic : (String) -> Void = { (name: String) in
+    print("개발자는 \(name)")
+}
+
+mrnlogic("이름")
+// 특정 값을 가지지 않고 오직 로직만으로 사용도 가능하다 Void
+//위 개념은 익명 함수와 비슷하다고 생각하면 될듯
 
 
