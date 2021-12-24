@@ -318,3 +318,193 @@ mrnlogic("이름")
 //위 개념은 익명 함수와 비슷하다고 생각하면 될듯
 
 
+
+//매개변수로서 클로저
+func sayHi(completion : () -> Void){
+    print("SayHi called")
+    //sleep(2)
+    completion()
+}
+//completion이라는 클로져를 배개변수로 가지는 함수.
+
+sayHi(completion: {
+    print("2초 가 지남")
+})
+
+//또는
+sayHi() {
+    print("2초가 지남.")
+}
+
+sayHi {
+    print("2초가 지남.")
+}// 맨 마지막이 클로저가 있으면 이런 블록처럼 사용도 가능.
+
+
+//매개변수로써의 클로저가 매개변수를 가짐, 즉 매개변수로써 데이터를 반환하는 클로저
+
+func secsayHi(completion : (String) ->Void){
+    
+    print("say hi with name called")
+    //sleep(2)
+    completion("오늘도 빡코딩 중인가여")
+}
+
+secsayHi(completion: {(comparam : String ) in
+    print("2초뒤에 그가 말했다.", comparam)
+})
+
+//또는
+
+secsayHi(completion: { comparam in
+    print("2초뒤에 그가 말했다.", comparam)
+})
+
+//또는
+
+secsayHi{ comparam in
+    print("2초뒤에 그가 말했다.", comparam)
+}
+//또는
+
+secsayHi{
+    print("2초뒤에 그가 말했다.", $0)
+}// 파라미터가 여러개일때 $0 $1 $2...
+
+func thirdsayHi(completion : (String, String) ->Void){
+    
+    print("say hi with name called")
+    //sleep(2)
+    completion("오늘도 빡코딩 중인가여", "ㅎㅎㅎ")
+}//매개변수 2개를 받는 매개변수클로저
+
+thirdsayHi() {firstpa , secondpa in
+    print("매개변수 두개 받아요~ \(firstpa) 그리고 \(secondpa)")
+}
+
+thirdsayHi() { _, secondpa in
+    print("처음 매개변수 생략해여 \(secondpa)")
+}// _로 지정하면 생략.
+
+
+//만약 매개변수 클로저인 completion을 받기 싫을때.
+// 클로저 자체를 옵셔널로 만든다.
+
+func OptionalHi(completion : (() -> Void)? = nil){
+    print("SayHi")
+    //sleep(2)
+    completion?()
+}
+
+OptionalHi()
+
+OptionalHi(completion: {
+    print("completion이 있다.")
+})
+
+//위 매개변수 클로저는 map이나 min함수의 기본이기도 하다.
+
+var manumber : [Int] = [0, 1, 2, 3, 4, 5]
+
+var transformnum = manumber.map { anumber in
+    return "숫자 : \(anumber)"
+}
+
+//객체 생성자, 해제자.
+// 메모리에 올리고 해제하는 개념.
+
+
+class MF {
+    let name : String
+    
+    init(_ name : String = "이름없음") {
+        self.name = name
+        print("MF가 메모리에 들어감")
+    }
+    deinit {
+        print("메모리에서 사라짐")
+    }//메모리 할당이 해제될 때 나오는데 사실 확인하기 힘듬.
+}
+
+let mf1 = MF("홍길동")
+
+let mfnone = MF()
+print(mf1.name)
+print(mfnone.name)
+
+print(Unmanaged.passRetained(mf1).toOpaque())
+print(Unmanaged.passRetained(mfnone).toOpaque())
+
+
+//상속.
+
+class freind11 {
+    let name : String
+    
+    init(_ name : String){
+        self.name = name
+    }
+    
+    func SHi() {
+        print("안녕 난 \(self.name) 이라고해")
+    }
+}
+
+class BF : freind11 {
+    
+    
+    override init(_ name: String) {
+        
+        //부모의 init을 무조건 덮어야해 super을 콜 한다.
+        super.init("BF" + name)
+    }
+    
+    override func SHi(){
+        super.SHi()
+    }
+    
+}
+
+let myf = freind11("친구")
+myf.SHi()
+
+let mybf = BF("베프")
+mybf.SHi()
+
+print(mybf.name)
+
+//딕셔너리.
+
+//키와 값으로 이루어짐.
+//만약 값이 없으면 디폴트 값이 나오게 할 수 있다
+
+var dicf = ["mybf" : "베프",
+            "myf" : "친구"
+            ]
+
+let bestfr = dicf["mybf"]
+let youtuber = dicf["youtuber" , default : "친구없음"]
+
+dicf["mybf"] = "베프베프"
+
+let transbf = dicf["mybf"]
+
+dicf["newfr"] = "새로운친구"
+
+let newF = dicf["newfr"]
+
+dicf.updateValue("updatefr", forKey: "update")
+//원래 있는 값으로도 가능하다(값이 바뀜)
+let upfr = dicf["update"]
+
+
+let diction : [String : Int] = [:]
+let diction2 = [String : Int]()
+//빈 딕셔너리 생성
+
+
+print(dicf.count)
+
+for item in dicf{
+    print("item :", item)
+}
