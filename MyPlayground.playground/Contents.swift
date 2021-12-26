@@ -508,3 +508,307 @@ print(dicf.count)
 for item in dicf{
     print("item :", item)
 }
+
+
+//final class.
+
+final class FC1 {
+    var name : String
+    
+    init(name : String){
+        self.name = name
+    }
+}
+
+//class FC1EX : FC1 {
+//
+//    override init(name: String) {
+//        super .init(name: "상속" + name)
+//    }
+//}
+
+let tfc1 = FC1(name: "호호")
+//let tfcex = FC1EX(name: "하하")
+
+//final의 경우 상속이 안된다 . 위 코드를 주석해제 하면 오류남.
+
+
+//inout
+
+func IOsay(_ name : String) {
+    print("안녕ㅇ 나는 \(name)이라고 해")
+}//name을 변경하려고 하면 오류가 난다.
+//let과 같다고 생각하면 된다.
+//값을 변경하는 방법
+
+func IOsay2(_ name : inout String) {
+    name = "사람인 " + name
+    print("안녕ㅇ 나는 \(name)이라고 해")
+}
+//inout을 붙여주면 된다. 다만 이제 이 파라미터에 값을 넣어줄 때 아래처럼해야한다.
+IOsay("이름")
+var nmnm = "이름"
+
+IOsay2(&nmnm)
+//앞에 &를 넣어줘야하는데 이를 할땐 변수를 활용하여 따로 저장하고 넣어줘야 한다.
+
+//에러
+enum MismatchError : Error{
+    case nameMissmatch
+    case numberMissmatch
+}
+
+//에러를 정의해둔다.
+
+func guessMyName(name input : String) throws{ //안에서는 input 외부 값 넣을땐 name
+    //throws를 붙임으로써 에러 처리를 하겟다.
+    print("guessMyname : called")
+    
+    if input != "이름" {
+        print("틀렷다")
+        throw MismatchError.nameMissmatch
+        //throw를 사용해 위에서 지정한 에러 사용
+    }
+    
+    print("맞췃다.")
+    
+}
+
+
+/// 번호를 맞춘다
+/// - Parameter input: 사용자 숫자 입력
+/// - Throws: 못맞췃을때
+/// - Returns: 맞췃는지 여부
+
+//위 커멘드는 option + command + /
+func guessMyNumber(number input : Int) throws -> Bool{
+    print("숫자 called")
+    if input != 10 {
+        print("틀렷다.")
+        throw MismatchError.numberMissmatch
+    }
+    print("맞췃다.")
+    return true
+}
+
+//try? guessMyName(name: "나이")
+//throws 즉 에러처리가 있는 메소드를 사용한다면 try를 붙여야한다.
+//만약 에러 처리를 사용하지 않을 경우 try? 라고 한다.
+//?가 없으면 에러를 잡겟다는 뜻.
+do {
+    try guessMyName(name: "나이")
+} catch {
+    print("잡은 에러 : \(error)")
+}
+//catch를 사용하면 에러가 자동으로 들어가게 된다.
+
+//try! guessMyName(name: "나이")
+//!의 경우 에러가 없다고 하는것인데. 만약 에러 발생하면 오류가 난다.
+
+do {
+    let receivedValue = try guessMyNumber(number: 9)// 값이 안들어감
+} catch {
+    print("잡은 에러 : \(error)")
+}
+
+//struct mutating
+
+class SMC {
+    var name : String
+    func changeName(newName : String) {
+        self.name = newName
+    }
+    init(_ name:String) {
+        self.name = name
+    }
+}
+var smcnn = SMC("이름")
+smcnn.changeName(newName: "새이름")
+
+print(smcnn.name)
+//이것은 클래스의 경우.
+//클래스에선 이름을 바꿀때 뮤테이팅 없어도 된다.
+
+struct SM {
+    var name : String
+    
+    mutating func changeName(newname : String){
+        self.name = newname
+    }//스트럭트 내의 맴버변수를 변경하려면 구조체는 mutating을 붙여줘야 한다.
+    
+}
+
+var smsm = SM(name: "뮤테팅")
+smsm.changeName(newname: "뮤테팅 완료p")
+print(smsm.name)
+
+//set
+// set도 collection의 한 종류 이다.
+//배열은 인덱스 딕셔너리는 키 벨류 셋은 고유값.
+//set은 인덱스가 고정되어있지 않다.
+//그래서 인덱스를 찾아 위치를 불러와야 그 값을 인덱스를 이용하여 활용가능.
+var mynumset : Set<Int  > = Set<Int>()
+
+mynumset.insert(1)
+mynumset.insert(2)
+mynumset.insert(3)
+mynumset.insert(4)
+mynumset.insert(1)
+mynumset.insert(1)
+
+print("개수",mynumset.count)
+
+for i in mynumset {
+    print(i)
+}
+
+var setb = mynumset.contains(1)
+print(setb)
+
+setb = mynumset.contains(5)
+print(setb)
+//conatins 는 값이 있는지 없는지.
+
+if let indexToRM = mynumset.firstIndex(of: 1){
+    print(indexToRM)
+    mynumset.remove(at: indexToRM)
+    print("1삭제")
+    
+}
+print(mynumset)
+
+//스트럭트도 메소드를 가지고있다. 예시는 스킵.
+
+
+//프로토콜(약속?)
+///보통 프로토콜 명은 --ing 또는 --able정도로 짓는다.
+protocol Naming{
+    //우리는 이런 변수를 가지고 있을겁니다라고 약속.
+    var lastname : String { get set }
+    var firstname : String { get set }
+    //우리는 이런 메소드를 가지고있을겁니다 라고 약속
+    func getName() -> String
+}
+
+//struct PF : Naming{
+//    var name: String
+//
+//    func getName() -> String {
+//        return "내 친구 : " + self.name
+//    }
+//
+//}꼭 프로토콜로 지정한 것들을 가지고 있어야한다.
+
+//프로토콜 상속.
+
+protocol Aging {
+    var age : Int {get set}
+}
+
+protocol Usernotifiable : Naming, Aging {
+    
+}
+
+struct PFEX : Usernotifiable{
+    var lastname: String
+    
+    var firstname: String
+    
+    func getName() -> String {
+        <#code#>
+    }
+    
+    var age: Int
+    
+    
+}
+class PFEXclass : Usernotifiable{
+    var lastname: String
+    
+    var firstname: String
+    
+    
+    func getName() -> String {
+        <#code#>
+    }
+    
+    var age: Int
+    
+    init(lastname: String,firstname:String, age : Int) {
+        self.lastname = lastname
+        self.firstname = firstname
+        self.age = age
+    }
+    
+}
+//이런식으로 사용이 가능하다.
+
+
+//프로토콜 확장.
+//프로토콜은 원래 메소드 x 사용할거라고 선언만 하지 로직을 넣진 못한다
+
+extension Naming {
+    func getfulltname() -> String{
+        return self.lastname + " " + self.firstname
+    }
+}
+//extension을 사용하면 로직을 넣은 메소드를 넣을 수 있다.
+
+struct PFM : Naming{
+    var lastname: String
+    
+    var firstname: String
+    
+    func getName() -> String {
+        return self.lastname
+    }
+    
+}
+let pfml = PFM(lastname: "홍", firstname: "길동")
+
+pfml.getName()
+pfml.getfulltname()
+//사용 가능한것을 볼 수 있다.
+
+//프로토콜 associatedType.
+
+protocol PetHaving{
+    associatedtype T
+    var pets : [T] {get set}
+    mutating func gotnewpet(_ newpet : T)
+}
+
+extension PetHaving{
+    mutating func gotnewpet(_ newpet : T){
+        self.pets.append(newpet)
+    }
+}
+
+enum Animal{
+    case cat, dog, bird
+}
+
+struct FPET : PetHaving{
+    var pets: [Animal] = []
+}
+
+struct FamPet : PetHaving{
+    var pets : [String] = []
+}
+
+var mpf = FPET()
+
+mpf.gotnewpet(Animal.cat)
+mpf.gotnewpet(Animal.dog)
+mpf.gotnewpet(Animal.bird)
+
+
+var fam1 = FamPet()
+fam1.gotnewpet("거북이")
+fam1.gotnewpet("토끼")
+fam1.gotnewpet("강아지")
+
+//검색 키워드
+//foreach, enum, for, unwrap, class, struct
+//옵저버, 제네릭, 클로저, 생성자 해제자, 상속, 딕셔너리
+//final, inout, error, mutating, set, protocol
